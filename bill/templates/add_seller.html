@@ -37,6 +37,7 @@
     <div class="container">
         <h2>Create Buyer</h2>
         <form method="POST">
+            <h3>Personal Details:</h3>
             {% csrf_token %}
             <div class="form-group">
                 <label for="name">Name:</label>
@@ -69,6 +70,23 @@
             <div class="form-group">
                 <label for="bal">Opening Balance: </label>
                 <input type="number" id="bal" name="bal" required>
+            </div>
+            <h3>Bank Details:</h3>
+            <div class="form-group">
+                <label for="bank_name">Bank Name:</label>
+                <input type="text" id="bank_name" name="bank_name" required>
+            </div>
+            <div class="form-group">
+                <label for="bank_ac_no">A/C Number:</label>
+                <input type="text" id="bank_ac_no" name="bank_ac_no" required>
+            </div>
+            <div class="form-group">
+                <label for="bank_ifsc">IFSC Code:</label>
+                <input type="text" id="bank_ifsc" name="bank_ifsc" required>
+            </div>
+            <div class="form-group">
+                <label for="bank_branch">Branch:</label>
+                <input type="text" id="bank_branch" name="bank_branch" required>
             </div>
             <button type="submit" class="submit-btn">Submit</button>
         </form>
