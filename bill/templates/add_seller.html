@@ -19,7 +19,7 @@
     <div class="container">
         <h2>Create Buyer</h2>
         <form method="POST">
-            <h3>Personal Details:</h3>
+            <h5>Personal Details:</h5>
             {% csrf_token %}
             <div class="form-group">
                 <label for="name">Name:</label>
@@ -53,7 +53,7 @@
                 <label for="bal">Opening Balance: </label>
                 <input type="number" id="bal" name="bal" required>
             </div>
-            <h3>Bank Details:</h3>
+            <h5>Bank Details:</h5>
             <div class="form-group">
                 <label for="bank_name">Bank Name:</label>
                 <input type="text" id="bank_name" name="bank_name" required>
