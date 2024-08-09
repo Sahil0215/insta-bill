@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instabill - Create Invoice</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+     <link rel="stylesheet" href="{% static 'css/add.css' %}">
+</head>
+<body>
+    <div class="navbar">
+        <a href="{% url 'home' %}"><div class="logo">Instabill</div></a>
+        <a href="{% url 'logout_page' %}"><button class="logout-btn">Logout</button></a>
+    </div>
+
+    <div class="container">
+        <h2>Edit Invoice</h2>
+        <!-- templates/edit_invoice.html -->
+<form method="POST">
+    {% csrf_token %}
+    <label for="invoice_from">Invoice From:</label>
+    <select name="invoice_from" id="invoice_from" required>
+        {% for seller in sellers %}
+        <option value="{{ seller.id }}" {% if seller.id == invoice.invoice_from.id %}selected{% endif %}>{{ seller.name }}</option>
+        {% endfor %}
+    </select><br>
+
+    <label for="invoice_to">Invoice To:</label>
+    <select name="invoice_to" id="invoice_to" required>
+        {% for buyer in buyers %}
+        <option value="{{ buyer.id }}" {% if buyer.id == invoice.invoice_to.id %}selected{% endif %}>{{ buyer.name }}</option>
+        {% endfor %}
+    </select><br>
+
+    <label for="date">Date:</label>
+    <input type="date" name="date" id="date" value="{{ invoice.date }}" required><br>
+
+    <label for="eway">Eway:</label>
+    <input type="text" name="eway" id="eway" value="{{ invoice.eway }}"><br>
+
+    <label for="transport">Transport:</label>
+    <input type="text" name="transport" id="transport" value="{{ invoice.transport }}"><br>
+
+    <label for="vehicle_no">Vehicle No:</label>
+    <input type="text" name="vehicle_no" id="vehicle_no" value="{{ invoice.vehicle_no }}"><br>
+
+    <label for="no_of_items">No. of Items:</label>
+    <input type="number" name="no_of_items" id="no_of_items" value="{{ invoice.no_of_items }}" required><br>
+
+    <!-- Render existing items and allow them to be edited -->
+    {% for item in invoice.invoice_items.all %}
+    <div>
+        <label for="item{{ forloop.counter }}">Item {{ forloop.counter }}:</label>
+        <select name="item{{ forloop.counter }}" id="item{{ forloop.counter }}">
+            {% for product in items %}
+            <option value="{{ product.id }}" {% if product.id == item.item_details.id %}selected{% endif %}>{{ product.name }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="quantity{{ forloop.counter }}">Quantity:</label>
+        <input type="number" name="quantity{{ forloop.counter }}" id="quantity{{ forloop.counter }}" value="{{ item.quantity }}" required><br>
+
+        <label for="rate{{ forloop.counter }}">Rate:</label>
+        <input type="text" name="rate{{ forloop.counter }}" id="rate{{ forloop.counter }}" value="{{ item.rate }}" required><br>
+
+        <label for="unit{{ forloop.counter }}">Unit:</label>
+        <input type="text" name="unit{{ forloop.counter }}" id="unit{{ forloop.counter }}" value="{{ item.unit }}" required><br>
+    </div>
+    {% endfor %}
+
+    <label for="other_charges">Other Charges:</label>
+    <input type="text" name="other_charges" id="other_charges" value="{{ invoice.other_charges }}"><br>
+
+    <label for="discount">Discount:</label>
+    <input type="text" name="discount" id="discount" value="{{ invoice.discount }}"><br>
+
+    <button type="submit">Update Invoice</button>
+</form>
+
+    
+    </div>
+
+        <script>
+            function toggleReceiver() {
+                const receiverCheckbox = document.getElementById('receiver_same_as_buyer');
+                const receiverDiv = document.getElementById('receiver_div');
+                receiverDiv.style.display = receiverCheckbox.checked ? 'none' : 'block';
+            }
+    
+            function generateFields() {
+                const numberOfFields = document.getElementById('no_of_items').value;
+                const container = document.getElementById('fieldsContainer');
+                let fieldsHTML = '';
+                for (let i = 1; i <= numberOfFields; i++) {
+                    fieldsHTML += `
+                        <div class="form-group">
+                        <label>Item ${i}</label>
+                        <select name="item${i}" onchange="checkAddOption(this)">
+                            {% for item in items %}
+                                <option value="{{ item.id }}">{{ item.name }}</option>
+                            {% endfor %}
+                            <option value="add_item">Add Item</option>
+                        </select>
+                        </div>
+                        
+                        <div class="form-group">
+                        <label>Rate: </label>
+                        <input type="text" name="rate${i}">
+                        </div>
+
+                        <div class="form-group">
+                        <label>Quantity:</label>
+                        <input type="number" name="quantity${i}">
+                        </div>
+
+                        <div class="form-group">
+                        <label>Unit:</label>
+                        <input type="text" name="unit${i}">
+                        </div>
+                        <hr style="height: 2px; background-color: black; border: none;">
+                    `;
+                }
+                container.innerHTML = fieldsHTML;
+            }
+    
+            function checkAddOption(selectElement) {
+                if (selectElement.value === "add_seller") {
+                    window.location.href = "/add_seller/";
+                } else if (selectElement.value === "add_buyer") {
+                    window.location.href = "/add_buyer/";
+                } else if (selectElement.value === "add_item") {
+                    window.location.href = "/add_item/";
+                }
+            }
+        </script>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

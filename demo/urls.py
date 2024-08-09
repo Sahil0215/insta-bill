@@ -35,6 +35,7 @@ urlpatterns = [
     path('add_invoice/', views.add_invoice, name="add_invoice"),
     path('delete_invoice/<int:invoice_id>/', views.delete_invoice, name="delete_invoice"),
     path('print_invoice/<int:invoice_id>/', views.print_invoice, name="print_invoice"),
+    path('edit_invoice/<int:invoice_id>/', views.edit_invoice, name='edit_invoice'),
     path('view/', views.view, name="view"),
 
 

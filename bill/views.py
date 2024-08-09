@@ -402,6 +402,122 @@ def add_invoice(request):
         items = item.objects.all()
         return render(request, 'add_invoice.html', {'sellers': sellers, 'buyers': buyers, 'items': items})
 
+
+# views.py
+from decimal import Decimal
+from datetime import datetime
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import seller, buyer, item, billedItem, invoice
+
+def edit_invoice(request, invoice_id):
+    invoice_obj = get_object_or_404(invoice, id=invoice_id)
+    
+    if request.method == "POST":
+        # Fetch data from POST request
+        invoice_from_id = request.POST.get('invoice_from')
+        invoice_to_id = request.POST.get('invoice_to')
+        date = request.POST.get('date')
+        eway = request.POST.get('eway')
+        transport = request.POST.get('transport')
+        vehicle_no = request.POST.get('vehicle_no')
+        no_of_items = int(request.POST.get('no_of_items'))
+        other_charges = Decimal(request.POST.get('other_charges', '0.00'))
+        discount = Decimal(request.POST.get('discount', '0.00'))
+
+        # Update the related seller and buyer
+        invoice_from = seller.objects.get(id=invoice_from_id)
+        invoice_to = buyer.objects.get(id=invoice_to_id)
+
+        taxable_amt = Decimal('0.00')
+        avg_sgst = Decimal('0.00')
+        avg_cgst = Decimal('0.00')
+
+        # Clear existing billed items and adjust stock back
+        for billed_item in invoice_obj.invoice_items.all():
+            billed_item.item_details.stock += billed_item.quantity
+            billed_item.item_details.save()
+            billed_item.delete()
+
+        invoice_items_arr = []
+        for i in range(1, no_of_items + 1):
+            item_details_id = request.POST.get('item' + str(i))
+            item_details = item.objects.get(id=item_details_id)
+            quantity = int(request.POST.get('quantity' + str(i)))
+            rate = Decimal(request.POST.get('rate' + str(i)))
+            unit = request.POST.get('unit' + str(i))
+            amount = quantity * rate
+            taxable_amt += amount
+            avg_sgst += item_details.sgst
+            avg_cgst += item_details.cgst
+
+            billedItem_object = billedItem(
+                item_details=item_details,
+                quantity=quantity,
+                rate=rate,
+                unit=unit,
+                amount=amount
+            )
+
+            item_details.stock -= quantity
+            item_details.save()
+
+            billedItem_object.save()
+            invoice_items_arr.append(billedItem_object)
+
+        taxable_amt += other_charges - discount
+        avg_sgst = avg_sgst / no_of_items
+        avg_cgst = avg_cgst / no_of_items
+        sgst_amt = (taxable_amt * avg_sgst) / Decimal('100.00')
+        cgst_amt = (taxable_amt * avg_cgst) / Decimal('100.00')
+        tgst_amt = sgst_amt + cgst_amt
+        grand_total = taxable_amt + tgst_amt
+
+        date_obj = datetime.strptime(date, '%Y-%m-%d').date()
+
+        # Update the invoice object
+        invoice_obj.invoice_from = invoice_from
+        invoice_obj.invoice_no = invoice_obj.invoice_no  # Keep the original invoice number
+        invoice_obj.date = date_obj
+        invoice_obj.eway = eway
+        invoice_obj.transport = transport
+        invoice_obj.vehicle_no = vehicle_no
+        invoice_obj.invoice_to = invoice_to
+        invoice_obj.no_of_items = no_of_items
+        invoice_obj.other_charges = other_charges
+        invoice_obj.discount = discount
+        invoice_obj.taxable_amt = taxable_amt
+        invoice_obj.sgst_amt = sgst_amt
+        invoice_obj.cgst_amt = cgst_amt
+        invoice_obj.tgst_amt = tgst_amt
+        invoice_obj.grand_total = grand_total
+        invoice_obj.grand_total_words = amount_to_words(grand_total)
+
+        # Adjust the buyer's balance
+        invoice_to.bal += grand_total - invoice_obj.grand_total
+        invoice_to.save()
+
+        # Save the updated invoice
+        invoice_obj.save()
+        invoice_obj.invoice_items.set(invoice_items_arr)
+
+        return redirect("/manage_invoice/")
+
+    else:
+        # Pre-fill the form with the current details
+        sellers = seller.objects.all()
+        buyers = buyer.objects.all()
+        items = item.objects.all()
+        return render(request, 'edit_invoice.html', {
+            'invoice': invoice_obj,
+            'sellers': sellers,
+            'buyers': buyers,
+            'items': items
+        })
+
+
+
+
+
 from num2words import num2words
 
 def amount_to_words(amount):
