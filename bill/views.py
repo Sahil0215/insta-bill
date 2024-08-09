@@ -477,7 +477,7 @@ def edit_invoice(request, invoice_id):
 
         # Update the invoice object
         invoice_obj.invoice_from = invoice_from
-        invoice_obj.invoice_no = invoice_obj.invoice_no  # Keep the original invoice number
+        invoice_obj.invoice_no = invoice_no  # Keep the original invoice number
         invoice_obj.date = date_obj
         invoice_obj.eway = eway
         invoice_obj.transport = transport
