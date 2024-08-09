@@ -34,8 +34,7 @@
                 <label for="invoice_from">Invoice From:</label>
                 <select name="invoice_from" id="invoice_from" required>
                     {% for seller in sellers %}
-                    <option value="{{ seller.id }}" {% if seller.id==invoice.invoice_from.id %}selected{% endif %}>{{
-                        seller.name }}</option>
+                    <option value="{{ seller.id }}" {% if seller.id==invoice.invoice_from.id %}selected{% endif %}>{{seller.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -44,8 +43,7 @@
                 <label for="invoice_to">Invoice To:</label>
                 <select name="invoice_to" id="invoice_to" required>
                     {% for buyer in buyers %}
-                    <option value="{{ buyer.id }}" {% if buyer.id==invoice.invoice_to.id %}selected{% endif %}>{{
-                        buyer.name }}</option>
+                    <option value="{{ buyer.id }}" {% if buyer.id==invoice.invoice_to.id %}selected{% endif %}>{{buyer.name}}</option>
                     {% endfor %}
                 </select>
             </div>
