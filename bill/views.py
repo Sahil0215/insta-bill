@@ -414,6 +414,7 @@ def edit_invoice(request, invoice_id):
     
     if request.method == "POST":
         # Fetch data from POST request
+        invoice_no = request.POST.get('invoice_no')
         invoice_from_id = request.POST.get('invoice_from')
         invoice_to_id = request.POST.get('invoice_to')
         date = request.POST.get('date')

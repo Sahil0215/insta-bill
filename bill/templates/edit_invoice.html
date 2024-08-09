@@ -20,6 +20,9 @@
         <!-- templates/edit_invoice.html -->
 <form method="POST">
     {% csrf_token %}
+    <label for="invoice_no">Invoice No:</label>
+    <input type="number" name="invoice_no" id="invoice_no" value="{{ invoice.invoice_no }}"><br>
+
     <label for="invoice_from">Invoice From:</label>
     <select name="invoice_from" id="invoice_from" required>
         {% for seller in sellers %}
