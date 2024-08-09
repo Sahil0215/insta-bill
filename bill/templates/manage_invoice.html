@@ -109,7 +109,7 @@
                     <td>{{ invoice.grand_total}}</td>
                     
                     <td>
-                        <form>
+                        <form method="POST">
                             {% csrf_token %}
                             <a href="{% url 'delete_invoice' invoice.id %}"><button type="submit">Delete</button></a><br>
                         </form>
