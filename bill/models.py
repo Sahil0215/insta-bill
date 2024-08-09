@@ -16,7 +16,7 @@ class buyer(models.Model):
     city = models.CharField(max_length=30)
     state = models.CharField(max_length=20)
     email = models.CharField(max_length=50, blank=True, null=True)
-    phone = models.CharField(max_length=15)
+    phone = models.CharField(max_length=15, blank=True, null=True )
     gst = models.CharField(max_length=20)
     bal = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     def __str__(self):
