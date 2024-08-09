@@ -18,7 +18,7 @@ body, html {
   font-weight: 600;
   color: #333;
 }
- .logout-btn {
+.navbar .logout-btn {
   font-size: 1rem;
   font-weight: 500;
   color: #fff;
@@ -29,7 +29,7 @@ body, html {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-.logout-btn:hover {
+.navbar .logout-btn:hover {
   background-color: #0056b3;
 }
 .container {
