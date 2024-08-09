@@ -18,13 +18,13 @@
         <thead>
             <tr>
                 <th>Date</td>
-                <th>From</td>
-                <th>To</td>
-                <th>Invoice No</td>
-                <th>Grand Total</td>
-                <th>Action</td>
-            </tr>
-        </thead>
+                    <th>From</td>
+                        <th>To</td>
+                            <th>Invoice No</td>
+                                <th>Grand Total</td>
+                                    <th>Action</td>
+                                    </tr>
+                                </thead>
         <tbody>
             {% for invoice in invoices %}
                 <tr>
@@ -33,7 +33,7 @@
                     <td>{{ invoice.invoice_to.name }}</td>
                     <td>{{ invoice.invoice_no}}</td>
                     <td>{{ invoice.grand_total}}</td>
-
+                    
                     <td>
                         <form action="{% url 'delete_invoice' invoice.id %}" method="POST">
                             {% csrf_token %}
@@ -42,21 +42,22 @@
                         </form>
                     </td>
                 </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        {% if messages %}
+        <div style="color: rgb(0, 0, 0); text-align: center;">
+            {% for message in messages %}
+            {{ message }}
             {% endfor %}
-        </tbody>
-    </table>
-    
-    {% if messages %}
-    <div style="color: rgb(0, 0, 0); text-align: center;">
-        {% for message in messages %}
-        {{ message }}
-        {% endfor %}
-    </div>
+        </div>
     {% endif %}
 
     <br><br>
+    <a href="{% url 'logout_page' %}"><button class="logout-btn">Logout</button></a>
     <center><a href="{% url 'add_invoice' %}"><button class="logout-btn">Add Invoice</button></a></center>
-
+    
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
