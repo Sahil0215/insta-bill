@@ -80,10 +80,9 @@
                     <label for="item{{ forloop.counter }}">Item {{ forloop.counter }}:</label>
                     <select name="item{{ forloop.counter }}" id="item{{ forloop.counter }}">
                         {% for product in items %}
-                        <option value="{{ product.id }}" {% if product.id==item.item_details.id %}selected{% endif %}>{{
-                            product.name }}</option>
+                        <option value="{{ product.id }}" {% if product.id == item.item_details.id %}selected{% endif %}>{{ product.name }}</option>
                         {% endfor %}
-                    </select>
+                    </select><br>
                 </div>
 
                 <div class="form-group">
