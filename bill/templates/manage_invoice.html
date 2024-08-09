@@ -111,7 +111,7 @@
                     <td>
                         <form>
                             {% csrf_token %}
-                            <a href="{% url 'delete_invoice' invoice.id %}"><button>Delete</button></a><br>
+                            <a href="{% url 'delete_invoice' invoice.id %}"><button type="submit">Delete</button></a><br>
                         </form>
                             <a href="{% url 'print_invoice' invoice.id %}">Print</a><br>
                             <a href="{% url 'edit_invoice' invoice.id %}">Edit</a>
