@@ -303,7 +303,7 @@ def delete_invoice(request, invoice_id):
 @login_required(login_url="/login_page/")
 def print_invoice(request, invoice_id):
     bill= invoice.objects.get(id=invoice_id)
-    return render(request, 'view.html', {'bill': bill, 'x' : range(1,25-bill.no_of_items)})
+    return render(request, 'view.html', {'bill': bill, 'x' : range(1,23-bill.no_of_items)})
 
 
 
@@ -338,7 +338,7 @@ def add_invoice(request):
         for i in range(1, no_of_items + 1):
             item_details_id = request.POST.get('item' + str(i))
             item_details = item.objects.get(id=item_details_id)
-            quantity = int(request.POST.get('quantity' + str(i)))
+            quantity = Decimal(request.POST.get('quantity' + str(i)))
             rate = Decimal(request.POST.get('rate' + str(i)))
             unit = request.POST.get('unit' + str(i))
             amount = quantity * rate
