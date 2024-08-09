@@ -109,9 +109,9 @@
                     <td>{{ invoice.grand_total}}</td>
                     
                     <td>
-                        <form method="POST">
+                        <form method="POST" action="{% url 'delete_invoice' invoice.id %}">
                             {% csrf_token %}
-                            <a href="{% url 'delete_invoice' invoice.id %}"><button type="submit">Delete</button></a><br>
+                            <button type="submit">Delete</button><br>
                         </form>
                             <a href="{% url 'print_invoice' invoice.id %}">Print</a><br>
                             <a href="{% url 'edit_invoice' invoice.id %}">Edit</a>
